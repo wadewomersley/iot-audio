@@ -1,0 +1,14 @@
+﻿<Page
+    x:Class="IOT_Audio.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:IOT_Audio"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d" Loaded="Page_Loaded" Height="695.446" Width="1142.574">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Margin="0,0,188.667,0.333">
+        <WebView x:Name="webView" Margin="10"/>
+
+    </Grid>
+</Page>
