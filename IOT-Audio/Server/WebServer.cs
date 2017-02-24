@@ -15,6 +15,39 @@
     using System.Net;
     using Windows.ApplicationModel;
     using Windows.Storage;
+    using Restup.Webserver.Rest;
+    using Restup.Webserver.Attributes;
+    using Restup.Webserver.Models.Schemas;
+    using Restup.Webserver.Models.Contracts;
+    using Restup.Webserver.Http;
+
+    [RestController(InstanceCreationType.PerCall)]
+    internal class RequestController
+    {
+        private GetResponse HomePageResponse;
+
+        public RequestController()
+        {
+            var t = new Task(() =>
+            {
+                Initialise();
+            });
+            t.RunSynchronously();
+        }
+
+        private async void Initialise()
+        {
+            var htmlFile = await Package.Current.InstalledLocation.GetFileAsync("Assets\\index.html");
+            HomePageResponse = new GetResponse(GetResponse.ResponseStatus.OK, await FileIO.ReadTextAsync(htmlFile));
+        }
+
+        [UriFormat("/")]
+        public IGetResponse GetHomeAsync()
+        {
+            return HomePageResponse;
+        }
+
+    }
 
     internal class WebServer
     {
@@ -33,10 +66,18 @@
         internal async void Initialize(Player player)
         {
             this.Player = player;
-            await Listener.BindServiceNameAsync(Port.ToString());
-            
-            var htmlFile = await Package.Current.InstalledLocation.GetFileAsync("Assets\\index.html");
-            this.Html = await FileIO.ReadTextAsync(htmlFile);
+
+
+            var routeHandler = new RestRouteHandler();
+            routeHandler.RegisterController<RequestController>();
+
+            var config = new HttpServerConfiguration();
+
+            config.ListenOnPort(Port)
+                .RegisterRoute(routeHandler);
+
+            var server = new HttpServer(config);
+            await server.StartServerAsync();
         }
 
         private async void ProcessRequest(StreamSocketListener sender, StreamSocketListenerConnectionReceivedEventArgs args)
