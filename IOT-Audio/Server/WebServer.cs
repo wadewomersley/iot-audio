@@ -20,33 +20,25 @@
     using Restup.Webserver.Models.Schemas;
     using Restup.Webserver.Models.Contracts;
     using Restup.Webserver.Http;
+    using Restup.Webserver.File;
 
-    [RestController(InstanceCreationType.PerCall)]
+    [RestController(InstanceCreationType.Singleton)]
     internal class RequestController
     {
-        private GetResponse HomePageResponse;
-
         public RequestController()
         {
-            var t = new Task(() =>
-            {
-                Initialise();
-            });
-            t.RunSynchronously();
         }
 
-        private async void Initialise()
+        [UriFormat("/volume")]
+        public IPutResponse SetVolume([FromContent] SetVolumeData data)
         {
-            var htmlFile = await Package.Current.InstalledLocation.GetFileAsync("Assets\\index.html");
-            HomePageResponse = new GetResponse(GetResponse.ResponseStatus.OK, await FileIO.ReadTextAsync(htmlFile));
+            return new PutResponse(PutResponse.ResponseStatus.NoContent);
         }
+    }
 
-        [UriFormat("/")]
-        public IGetResponse GetHomeAsync()
-        {
-            return HomePageResponse;
-        }
-
+    internal sealed class SetVolumeData
+    {
+        public uint Volume { get; set; }
     }
 
     internal class WebServer
@@ -74,7 +66,8 @@
             var config = new HttpServerConfiguration();
 
             config.ListenOnPort(Port)
-                .RegisterRoute(routeHandler);
+                .RegisterRoute("api", routeHandler)
+                .RegisterRoute(new StaticFileRouteHandler(@"Assets"));
 
             var server = new HttpServer(config);
             await server.StartServerAsync();
@@ -177,7 +170,7 @@
             var files = new List<string>(music.Count);
             foreach (var file in music)
             {
-                files.Add("<li><a href=\"/play=" + file.Name + "\">" + file.DisplayName + "</a></li>");
+                files.Add("<li><a href=\"/api/play/" + file.Name + "\">" + file.DisplayName + "</a></li>");
             }
 
             data = data.Replace("%PLAYLIST%", String.Join("", files.ToArray()));
