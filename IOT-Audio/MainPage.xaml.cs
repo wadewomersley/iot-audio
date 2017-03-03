@@ -33,10 +33,10 @@ namespace IOT_Audio
 
         public MainPage()
         {
-            this.InitializeComponent();
-            this.WebServer = new WebServer();
-            this.MediaPlayer = new Player();
-            this.webView.ScriptNotify += WebView_ScriptNotify;
+            InitializeComponent();
+            MediaPlayer = new Player();
+            WebServer = new WebServer(MediaPlayer);
+            webView.ScriptNotify += WebView_ScriptNotify;
         }
 
         private void WebView_ScriptNotify(object sender, NotifyEventArgs e)
@@ -46,8 +46,8 @@ namespace IOT_Audio
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            this.WebServer.Initialize(this.MediaPlayer);
-            this.webView.Source = AudioUri;
+            WebServer.Initialize();
+            webView.Source = AudioUri;
         }
     }
 }

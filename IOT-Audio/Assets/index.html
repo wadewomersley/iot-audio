@@ -5,6 +5,12 @@
     <title>Audio Player</title>
     <script>
         window.onload = function () {
+            var playlistReq = new XMLHttpRequest();
+            playlistReq.open("GET", "/api/playlist");
+            playlistReq.onload = function (ev) {
+            };
+            playlistReq.send();
+
             document.getElementById("volume").onchange = function (e) {
                 var vol = document.getElementById("volume").value;
                 var oReq = new XMLHttpRequest();
