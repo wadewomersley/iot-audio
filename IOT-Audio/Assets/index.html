@@ -2,24 +2,39 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Audio Player</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
     <script>
-        function sendRequest(path, data) {
-            var oReq = new XMLHttpRequest();
-            oReq.open("PUT", "/api/" + path);
-            oReq.send(JSON.stringify(data));
+        function sendChange(path, data) {
+            $.ajax({
+                type: 'PUT',
+                url: '/api/' + path,
+                data: JSON.stringify(data)
+            });
         }
 
-        function playLink(e) {2
+        function getData(path, callback) {
+            $.ajax({
+                type: 'get',
+                url: '/api/' + path,
+                success: callback
+            });
+        }
+
+        function playLink(e) {
             e.preventDefault();
             var filename = decodeURIComponent(this.pathname.substring(1));
 
-            sendRequest('play', { FileName: filename });
+            sendChange('play', { FileName: filename });
         };
 
         function changeStartupFile(e) {
             e.preventDefault();
-            var inputs = document.getElementsByClassName('startupFile');
+            var inputs = $('input[type="checkbox"].startupFile');
             var filename = this.value;
 
             for (var i = 0; i < inputs.length; i++) {
@@ -28,59 +43,51 @@
                 }
             }
 
-            sendRequest('startupFile', { filename: this.checked ? filename : null });
+            sendChange('startupFile', { filename: this.checked ? filename : null });
         };
+        
 
-        window.onload = function () {
-            var settingsReq = new XMLHttpRequest();
-            settingsReq.open("GET", "/api/settings");
-            settingsReq.onload = function (ev) {
-                var settings = JSON.parse(this.responseText);
-
+        $(document).ready(function () {
+            getData('settings', function(settings) {
                 if (settings.Volume !== null) {
-                    document.getElementById("volume").value = settings.Volume;
+                    $('#volume').val(settings.Volume);
                 }
-                
-                var playlistReq = new XMLHttpRequest();
-                playlistReq.open("GET", "/api/playlist");
-                playlistReq.onload = function (ev) {
-                    var ul = document.getElementById('playlist');
-                    var files = JSON.parse(this.responseText).Files;
+
+                getData('playlist', function (files) {
+                    files = files.Files;
+
+                    var $ul = $('#playlist');
 
                     for (var i = 0; i < files.length; i++) {
-                        var li = document.createElement('li');
-                        var link = document.createElement('a');
+                        var $li = $('<li/>');
+                        var $link = $('<a/>');
+                        var $input = $('<input/>');
 
-                        var input = document.createElement('input');
-                        input.type = 'checkbox';
-                        input.className = 'startupFile';
-                        input.value = files[i].FileName;
+                        $input.attr('type', 'checkbox');
+                        $input.attr('class', 'startupFile');
+                        $input.val(files[i].FileName);
 
-                        link.href = files[i].FileName;
-                        link.innerText = files[i].DisplayName;
+                        $link.attr('href', files[i].FileName);
+                        $link.text(files[i].DisplayName);
 
-                        li.appendChild(link);
-                        li.appendChild(input);
-                        ul.appendChild(li);
-                        
-                        if (files[i].FileName === settings.StartupFilename) {
-                            input.checked = true;
-                        }
+                        $input.attr('checked', files[i].FileName === settings.StartupFilename);
 
-                        link.onclick = playLink
-                        input.onchange = changeStartupFile;
+                        $link.appendTo($li);
+                        $input.appendTo($li);
+                        $li.appendTo($ul);
+
+                        $link.on('click', playLink);
+                        $input.on('change', changeStartupFile);
                     }
-                };
-                playlistReq.send();
-            };
-            settingsReq.send();
+                });
+            });
 
-            document.getElementById("volume").onchange = function (e) {
-                var vol = document.getElementById("volume").value;
+            $('#volume').on('change', function (e) {
+                var volume = parseInt($(this).val());
 
-                sendRequest('volume', { Volume: vol });
-            };
-        };
+                sendChange('volume', { Volume: volume });
+            });;
+        });
     </script>
 </head>
 <body>
