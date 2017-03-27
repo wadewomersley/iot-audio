@@ -10,11 +10,11 @@
             oReq.send(JSON.stringify(data));
         }
 
-        function playLink(e) {
+        function playLink(e) {2
             e.preventDefault();
             var filename = decodeURIComponent(this.pathname.substring(1));
 
-            sendRequest('play', { filename: filename });
+            sendRequest('play', { FileName: filename });
         };
 
         function changeStartupFile(e) {
@@ -78,7 +78,7 @@
             document.getElementById("volume").onchange = function (e) {
                 var vol = document.getElementById("volume").value;
 
-                sendRequest('volume', { volume: vol });
+                sendRequest('volume', { Volume: vol });
             };
         };
     </script>
