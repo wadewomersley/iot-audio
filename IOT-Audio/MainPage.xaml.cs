@@ -12,6 +12,7 @@ namespace IOT_Audio
     using System.Threading.Tasks;
     using Windows.Foundation;
     using Windows.Foundation.Collections;
+    using Windows.Storage;
     using Windows.System.Threading;
     using Windows.UI.Xaml;
     using Windows.UI.Xaml.Controls;
@@ -34,14 +35,26 @@ namespace IOT_Audio
         public MainPage()
         {
             InitializeComponent();
-            MediaPlayer = new Player();
-            WebServer = new WebServer(MediaPlayer);
-            webView.ScriptNotify += WebView_ScriptNotify;
-        }
 
-        private void WebView_ScriptNotify(object sender, NotifyEventArgs e)
-        {
-            var a = 1;
+            MediaPlayer = new Player();
+
+            var volume = 100;
+            var startupFile = (string)null;
+
+            if (ApplicationData.Current.LocalSettings.Values["volume"] is int)
+            {
+                volume = (int)ApplicationData.Current.LocalSettings.Values["volume"];
+                MediaPlayer.SetVolume(volume);
+            }
+
+            if (ApplicationData.Current.LocalSettings.Values["startupFile"] != null)
+            {
+                startupFile = ApplicationData.Current.LocalSettings.Values["startupFile"].ToString();
+                MediaPlayer.SetFileName(startupFile);
+            }
+
+
+            WebServer = new WebServer(MediaPlayer, volume, startupFile);
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)

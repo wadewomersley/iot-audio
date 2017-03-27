@@ -26,11 +26,19 @@
     internal class RequestController
     {
         public static Player Player;
+        public static Settings Settings;
+
+        [UriFormat("/settings")]
+        public IGetResponse GetSettings()
+        {
+            return new GetResponse(GetResponse.ResponseStatus.OK, Settings);
+        }
         
         [UriFormat("/volume")]
         public IPutResponse SetVolume([FromContent] SetVolumeData data)
         {
-            Player.SetVolume(Convert.ToInt32(data.Volume));
+            Player.SetVolume(data.Volume);
+            ApplicationData.Current.LocalSettings.Values["volume"] = data.Volume;
             return new PutResponse(PutResponse.ResponseStatus.NoContent);
         }
 
@@ -38,6 +46,13 @@
         public IPutResponse SetFileToPlay([FromContent] SetFileData data)
         {
             Player.SetFileName(data.Filename);
+            return new PutResponse(PutResponse.ResponseStatus.NoContent);
+        }
+
+        [UriFormat("/startupFile")]
+        public IPutResponse SetStartupFile([FromContent] SetFileData data)
+        {
+            ApplicationData.Current.LocalSettings.Values["startupFile"] = data.Filename;
             return new PutResponse(PutResponse.ResponseStatus.NoContent);
         }
 
@@ -61,6 +76,13 @@
         }
     }
 
+    internal sealed class Settings
+    {
+        public int Volume { get; set; }
+
+        public string StartupFilename { get; set; }
+    }
+
     internal sealed class FileInfo
     {
         public string FileName { get; set; }
@@ -75,7 +97,7 @@
 
     internal sealed class SetVolumeData
     {
-        public uint Volume { get; set; }
+        public int Volume { get; set; }
     }
 
     internal sealed class SetFileData
@@ -87,11 +109,15 @@
     {
         private int Port = 16000;
         private Player Player;
-        private string Html;
         private HttpServer Server;
 
-        internal WebServer(Player player)
+        internal WebServer(Player player, int volume, string startupFile)
         {
+            RequestController.Settings = new Settings() {
+                StartupFilename = startupFile,
+                Volume = volume
+            };
+
             Player = player;
             RequestController.Player = player;
 
@@ -111,7 +137,6 @@
         {
             var task = Server.StartServerAsync();
             task.Wait();
-            var a = 1;
         }
     }
 }

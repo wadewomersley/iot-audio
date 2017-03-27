@@ -1,21 +1,84 @@
 ﻿<!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en">
 <head>
     <meta charset="utf-8" />
     <title>Audio Player</title>
     <script>
+        function sendRequest(path, data) {
+            var oReq = new XMLHttpRequest();
+            oReq.open("PUT", "/api/" + path);
+            oReq.send(JSON.stringify(data));
+        }
+
+        function playLink(e) {
+            e.preventDefault();
+            var filename = decodeURIComponent(this.pathname.substring(1));
+
+            sendRequest('play', { filename: filename });
+        };
+
+        function changeStartupFile(e) {
+            e.preventDefault();
+            var inputs = document.getElementsByClassName('startupFile');
+            var filename = this.value;
+
+            for (var i = 0; i < inputs.length; i++) {
+                if (this != inputs[i]) {
+                    inputs[i].checked = false;
+                }
+            }
+
+            sendRequest('startupFile', { filename: this.checked ? filename : null });
+        };
+
         window.onload = function () {
-            var playlistReq = new XMLHttpRequest();
-            playlistReq.open("GET", "/api/playlist");
-            playlistReq.onload = function (ev) {
+            var settingsReq = new XMLHttpRequest();
+            settingsReq.open("GET", "/api/settings");
+            settingsReq.onload = function (ev) {
+                var settings = JSON.parse(this.responseText);
+
+                if (settings.Volume !== null) {
+                    document.getElementById("volume").value = settings.Volume;
+                }
+                
+                var playlistReq = new XMLHttpRequest();
+                playlistReq.open("GET", "/api/playlist");
+                playlistReq.onload = function (ev) {
+                    var ul = document.getElementById('playlist');
+                    var files = JSON.parse(this.responseText).Files;
+
+                    for (var i = 0; i < files.length; i++) {
+                        var li = document.createElement('li');
+                        var link = document.createElement('a');
+
+                        var input = document.createElement('input');
+                        input.type = 'checkbox';
+                        input.className = 'startupFile';
+                        input.value = files[i].FileName;
+
+                        link.href = files[i].FileName;
+                        link.innerText = files[i].DisplayName;
+
+                        li.appendChild(link);
+                        li.appendChild(input);
+                        ul.appendChild(li);
+                        
+                        if (files[i].FileName === settings.StartupFilename) {
+                            input.checked = true;
+                        }
+
+                        link.onclick = playLink
+                        input.onchange = changeStartupFile;
+                    }
+                };
+                playlistReq.send();
             };
-            playlistReq.send();
+            settingsReq.send();
 
             document.getElementById("volume").onchange = function (e) {
                 var vol = document.getElementById("volume").value;
-                var oReq = new XMLHttpRequest();
-                oReq.open("PUT", "/api/volume");
-                oReq.send('{"volume":' + vol + '}');
+
+                sendRequest('volume', { volume: vol });
             };
         };
     </script>

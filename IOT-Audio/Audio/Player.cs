@@ -11,7 +11,6 @@
 
     class Player
     {
-        private StorageFile File;
         private MediaPlayer MediaPlayer;
 
         internal Player()
@@ -21,7 +20,7 @@
             MediaPlayer.AutoPlay = true;
         }
 
-        internal async void SetFile(StorageFile file)
+        internal void SetFile(StorageFile file)
         {
             MediaPlayer.SetFileSource(file);
             MediaPlayer.Play();
@@ -31,10 +30,10 @@
         {
             try
             {
-                var music = await Windows.Storage.KnownFolders.MusicLibrary.GetFileAsync(filename);
+                var music = await KnownFolders.MusicLibrary.GetFileAsync(filename);
                 SetFile(music);
             }
-            catch(Exception ex)
+            catch(Exception)
             {
             }
         }
