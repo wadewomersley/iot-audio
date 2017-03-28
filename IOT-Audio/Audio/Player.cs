@@ -1,11 +1,6 @@
 ﻿namespace IOT_Audio.Audio
 {
     using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using Windows.Media.Playback;
     using Windows.Storage;
 

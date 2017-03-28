@@ -105,6 +105,12 @@
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Model\JsonObjects\SetFileData.cs" />
+    <Compile Include="Model\JsonObjects\FileInformation.cs" />
+    <Compile Include="Model\JsonObjects\PlaylistData.cs" />
+    <Compile Include="Model\JsonObjects\Settings.cs" />
+    <Compile Include="Model\JsonObjects\SetVolumeData.cs" />
+    <Compile Include="Server\Controllers\RequestController.cs" />
     <Compile Include="Server\WebServer.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -144,6 +150,7 @@
       <Name>Windows IoT Extensions for the UWP</Name>
     </SDKReference>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
