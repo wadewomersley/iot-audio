@@ -1,6 +1,7 @@
 ﻿namespace IOT_Audio.Audio
 {
     using System;
+    using Windows.Media.Core;
     using Windows.Media.Playback;
     using Windows.Storage;
 
@@ -17,7 +18,7 @@
 
         internal void SetFile(StorageFile file)
         {
-            MediaPlayer.SetFileSource(file);
+            MediaPlayer.Source = MediaSource.CreateFromStorageFile(file);
             MediaPlayer.Play();
         }
 
