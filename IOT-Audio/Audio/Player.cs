@@ -4,6 +4,7 @@
     using Windows.Media.Core;
     using Windows.Media.Playback;
     using Windows.Storage;
+    using System.Diagnostics.Contracts;
 
     class Player
     {
@@ -32,11 +33,17 @@
             catch(Exception)
             {
             }
+            SetVolume(-1);
         }
 
+        /// <summary>
+        /// Sets volume between 0 and 100 (%).
+        /// </summary>
+        /// <param name="vol"></param>
         internal void SetVolume(int vol)
         {
-            var curVol = MediaPlayer.Volume;
+            Contract.Requires(vol >=0 && vol <= 100, "Volume must be between 0 and 100");
+
             MediaPlayer.Volume = (double)vol / 100;
         }
     }
