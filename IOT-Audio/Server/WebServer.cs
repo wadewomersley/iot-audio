@@ -5,8 +5,9 @@
     using Restup.Webserver.File;
     using Restup.Webserver.Http;
     using Restup.Webserver.Rest;
+    using System;
 
-    internal class WebServer
+    internal class WebServer : IDisposable
     {
         private int Port = 16000;
         private HttpServer Server;
@@ -23,6 +24,11 @@
                 .RegisterRoute(new StaticFileRouteHandler(@"Assets"));
 
             Server = new HttpServer(config);
+        }
+
+        public void Dispose()
+        {
+            Server.StopServer();
         }
 
         internal void Initialize()
