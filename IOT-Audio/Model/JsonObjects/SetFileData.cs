@@ -2,6 +2,6 @@
 {
     internal sealed class SetFileData
     {
-        public string Filename { get; set; }
+        public string FileName { get; set; }
     }
 }

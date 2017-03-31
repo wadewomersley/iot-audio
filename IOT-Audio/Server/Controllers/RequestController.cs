@@ -33,14 +33,14 @@
         [UriFormat("/play")]
         public IPutResponse SetFileToPlay([FromContent] SetFileData data)
         {
-            Player.SetFileName(data.Filename);
+            Player.SetFileName(data.FileName);
             return new PutResponse(PutResponse.ResponseStatus.NoContent);
         }
 
         [UriFormat("/startupFile")]
         public IPutResponse SetStartupFile([FromContent] SetFileData data)
         {
-            ApplicationData.Current.LocalSettings.Values["startupFile"] = data.Filename;
+            ApplicationData.Current.LocalSettings.Values["startupFile"] = data.FileName;
             return new PutResponse(PutResponse.ResponseStatus.NoContent);
         }
 
