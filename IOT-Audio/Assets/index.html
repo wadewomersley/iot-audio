@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Audio Player</title>
+    <title>IOT Audio Player</title>
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <script src="js/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
@@ -17,23 +17,22 @@
             });
         }
 
-        function getData(path, callback) {
-            $.ajax({
+        function getData(path) {
+            return $.ajax({
                 type: 'get',
-                url: '/api/' + path,
-                success: callback
+                url: '/api/' + path
             });
         }
 
         function playLink(e) {
             e.preventDefault();
-            var filename = decodeURIComponent(this.pathname.substring(1));
 
-            sendChange('play', { FileName: filename });
+            sendChange('play', { FileName: decodeURIComponent(this.pathname.substring(1)) });
         };
 
         function changeStartupFile(e) {
             e.preventDefault();
+
             var inputs = $('input[type="checkbox"].startupFile');
             var filename = this.value;
 
@@ -48,23 +47,22 @@
         
 
         $(document).ready(function () {
-            getData('settings', function(settings) {
-                if (settings.Volume !== null) {
-                    $('#volume').val(settings.Volume);
-                }
+            var $playlist = $('#playlist');
+            var $volume = $('#volume');
 
-                getData('playlist', function (files) {
-                    files = files.Files;
+            $.when(getData('settings'), getData('playlist'))
+                .then(function (settings, playlist) {
+                    if (settings.Volume !== null) {
+                        $volume.val(settings.Volume);
+                    }
 
-                    var $ul = $('#playlist');
+                    var files = playlist.Files;
 
                     for (var i = 0; i < files.length; i++) {
                         var $li = $('<li/>');
                         var $link = $('<a/>');
-                        var $input = $('<input/>');
-
-                        $input.attr('type', 'checkbox');
-                        $input.attr('class', 'startupFile');
+                        var $input = $('<input type="checkbox" class="startupFile" />');
+                        
                         $input.val(files[i].FileName);
 
                         $link.attr('href', files[i].FileName);
@@ -74,18 +72,15 @@
 
                         $link.appendTo($li);
                         $input.appendTo($li);
-                        $li.appendTo($ul);
+                        $li.appendTo($playlist);
 
                         $link.on('click', playLink);
                         $input.on('change', changeStartupFile);
                     }
                 });
-            });
 
-            $('#volume').on('change', function (e) {
-                var volume = parseInt($(this).val());
-
-                sendChange('volume', { Volume: volume });
+            $volume.on('change', function (e) {
+                sendChange('volume', { Volume: parseInt($(this).val()) });
             });;
         });
     </script>
