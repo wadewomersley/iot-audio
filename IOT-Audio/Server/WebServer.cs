@@ -12,12 +12,10 @@
         private int Port = 16000;
         private HttpServer Server;
 
-        internal WebServer(Player player, Settings startupSettings)
+        internal WebServer(Player player, Manager manager)
         {
-            RequestController.Player = player;
-
             var routeHandler = new RestRouteHandler();
-            routeHandler.RegisterController<RequestController>();
+            routeHandler.RegisterController<RequestController>(player, manager);
 
             var config = new HttpServerConfiguration();
 

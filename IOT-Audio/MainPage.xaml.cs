@@ -15,37 +15,18 @@
     {
         private static Uri AudioUri = new Uri(@"http://localhost:16000");
         private WebServer WebServer;
-        private Player MediaPlayer;
 
         public MainPage()
         {
             InitializeComponent();
 
-            MediaPlayer = new Player();
+            var mediaPlayer = new Player();
+            var manager = new Manager();
 
-            var volume = 100;
-            var startupFile = (string)null;
+            mediaPlayer.SetVolume(manager.GetStartupVolume());
+            mediaPlayer.SetFileName(manager.GetStartupFile());
 
-            if (ApplicationData.Current.LocalSettings.Values["volume"] is int)
-            {
-                volume = (int)ApplicationData.Current.LocalSettings.Values["volume"];
-                MediaPlayer.SetVolume(volume);
-            }
-
-            if (ApplicationData.Current.LocalSettings.Values["startupFile"] != null)
-            {
-                startupFile = ApplicationData.Current.LocalSettings.Values["startupFile"].ToString();
-                MediaPlayer.SetFileName(startupFile);
-            }
-
-            var settings = new Settings()
-            {
-                StartupFilename = startupFile,
-                Volume = volume
-            };
-
-
-            WebServer = new WebServer(MediaPlayer, settings);
+            WebServer = new WebServer(mediaPlayer, manager);
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)

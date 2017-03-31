@@ -25,6 +25,11 @@
 
         internal async void SetFileName(string filename)
         {
+            if (filename == null)
+            {
+                return;
+            }
+
             try
             {
                 var music = await KnownFolders.MusicLibrary.GetFileAsync(filename);
@@ -33,7 +38,6 @@
             catch(Exception)
             {
             }
-            SetVolume(-1);
         }
 
         /// <summary>
