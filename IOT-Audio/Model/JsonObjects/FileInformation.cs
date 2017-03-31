@@ -1,8 +1,7 @@
-﻿using System;
-using Windows.Storage;
-
-namespace IOT_Audio.Server.Model.JsonObjects
+﻿namespace IOT_Audio.Server.Model.JsonObjects
 {
+    using Windows.Storage;
+
     internal sealed class FileInformation
     {
         public string FileName { get; set; }

@@ -1,10 +1,7 @@
 ﻿namespace IOT_Audio.Server.Controllers
 {
     using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
     using Audio;
-    using Windows.Storage;
     using System.Linq;
     using Restup.Webserver.Attributes;
     using Restup.Webserver.Models.Schemas;
@@ -63,9 +60,8 @@
             var fileList = Manager.GetFileList().GetAwaiter().GetResult();
             var files = fileList.Select(f => FileInformation.FromStorage(f)).ToList();
             var body = new PlaylistData() { Files = files.ToArray() };
-
-            var response = new GetResponse(GetResponse.ResponseStatus.OK, body);
-            return response;
+            
+            return new GetResponse(GetResponse.ResponseStatus.OK, body); ;
         }
     }
 }
