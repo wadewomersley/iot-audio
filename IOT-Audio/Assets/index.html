@@ -57,6 +57,9 @@
 
             $.when(getData('settings'), getData('playlist'))
                 .then(function (settings, playlist) {
+                    settings = settings[0];
+                    playlist = playlist[0];
+
                     if (settings.Volume !== null) {
                         $volume.val(settings.Volume);
                     }

@@ -18,10 +18,11 @@
             routeHandler.RegisterController<RequestController>(player, manager);
 
             var config = new HttpServerConfiguration();
-
+            
             config.ListenOnPort(Port)
                 .RegisterRoute("api", routeHandler)
-                .RegisterRoute(new StaticFileRouteHandler(@"Assets"));
+                .RegisterRoute(new StaticFileRouteHandler(@"Assets"))
+                .EnableCors();
 
             Server = new HttpServer(config);
         }
