@@ -2,7 +2,7 @@
 {
     using Windows.Storage;
 
-    internal sealed class FileInformation
+    internal sealed class FileInformation : ApiKeyAbstract
     {
         public string FileName { get; set; }
 

@@ -1,6 +1,6 @@
 ﻿namespace IOT_Audio.Server.Model.JsonObjects
 {
-    internal sealed class SetVolumeData
+    internal sealed class SetVolumeData : ApiKeyAbstract
     {
         public int Volume { get; set; }
     }

@@ -39,5 +39,24 @@
             var volume = ApplicationData.Current.LocalSettings.Values["volume"];
             return volume is int ? (int)volume : 100;
         }
+
+        internal string GetApiKey()
+        {
+            var key = ApplicationData.Current.LocalSettings.Values["apiKey"]?.ToString();
+
+            if (key == null)
+            {
+                key = Convert.ToBase64String(Guid.NewGuid().ToByteArray()) + Convert.ToBase64String(Guid.NewGuid().ToByteArray()) + Convert.ToBase64String(Guid.NewGuid().ToByteArray());
+                key = key.Replace("=", "").Replace("+", "").Replace("/", "");
+                SetApiKey(key);
+            }
+
+            return key;
+        }
+
+        internal void SetApiKey(string apiKey)
+        {
+            ApplicationData.Current.LocalSettings.Values["apiKey"] = apiKey;
+        }
     }
 }

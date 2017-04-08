@@ -109,6 +109,7 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Model\JsonObjects\ApiKeyAbstract.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Model\JsonObjects\SetFileData.cs" />
     <Compile Include="Model\JsonObjects\FileInformation.cs" />

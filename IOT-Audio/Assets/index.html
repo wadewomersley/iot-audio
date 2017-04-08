@@ -9,7 +9,11 @@
     <script src="js/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script>
+        var apiKey = location.search.substring(1);
+
         function sendChange(path, data) {
+            data.apiKey = apiKey;
+
             $.ajax({
                 type: 'PUT',
                 url: '/api/' + path,
@@ -18,6 +22,7 @@
         }
 
         function getData(path) {
+            path = path + (path.indexOf('?') > -1 ? '&' : '?') + 'apiKey=' + encodeURIComponent(apiKey);
             return $.ajax({
                 type: 'get',
                 url: '/api/' + path
