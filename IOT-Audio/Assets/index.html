@@ -6,100 +6,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>IOT Audio Player</title>
     <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/app.css">
     <script src="js/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
-    <script>
-        var apiKey = location.search.substring(1);
-
-        function sendChange(path, data) {
-            data.apiKey = apiKey;
-
-            $.ajax({
-                type: 'PUT',
-                url: '/api/' + path,
-                data: JSON.stringify(data)
-            });
-        }
-
-        function getData(path) {
-            path = path + (path.indexOf('?') > -1 ? '&' : '?') + 'apiKey=' + encodeURIComponent(apiKey);
-            return $.ajax({
-                type: 'get',
-                url: '/api/' + path
-            });
-        }
-
-        function playLink(e) {
-            e.preventDefault();
-
-            sendChange('play', { FileName: decodeURIComponent(this.pathname.substring(1)) });
-        };
-
-        function changeStartupFile(e) {
-            e.preventDefault();
-
-            var inputs = $('input[type="checkbox"].startupFile');
-            var filename = this.value;
-
-            for (var i = 0; i < inputs.length; i++) {
-                if (this != inputs[i]) {
-                    inputs[i].checked = false;
-                }
-            }
-
-            sendChange('startupFile', { filename: this.checked ? filename : null });
-        };
-        
-
-        $(document).ready(function () {
-            var $playlist = $('#playlist');
-            var $volume = $('#volume');
-
-            $.when(getData('settings'), getData('playlist'))
-                .then(function (settings, playlist) {
-                    settings = settings[0];
-                    playlist = playlist[0];
-
-                    if (settings.Volume !== null) {
-                        $volume.val(settings.Volume);
-                    }
-
-                    var files = playlist.Files;
-
-                    for (var i = 0; i < files.length; i++) {
-                        var $li = $('<li/>');
-                        var $link = $('<a/>');
-                        var $input = $('<input type="checkbox" class="startupFile" />');
-                        
-                        $input.val(files[i].FileName);
-
-                        $link.attr('href', files[i].FileName);
-                        $link.text(files[i].DisplayName);
-
-                        $input.attr('checked', files[i].FileName === settings.StartupFilename);
-
-                        $link.appendTo($li);
-                        $input.appendTo($li);
-                        $li.appendTo($playlist);
-
-                        $link.on('click', playLink);
-                        $input.on('change', changeStartupFile);
-                    }
-                });
-
-            $volume.on('change', function (e) {
-                sendChange('volume', { Volume: parseInt($(this).val()) });
-            });;
-        });
-    </script>
+    <script src="js/debug.js"></script>
+    <script src="js/app.js"></script>
 </head>
 <body>
 
-<p>Click to Play</p>
+<div class="container">
 
-<ul id="playlist"></ul>
+    <div class="row">
+        <div class="col-sm-12">
+            <h1>IOT Audio</h1>
+        </div>
+    </div>
 
-<input type="range" id="volume" min="1" value="100" max="100" step="1">
+    <div class="row">
+        <div class="col-sm-12">
+            <p>Choose a file to play, use the checkbox to set the file to play at startup.</p>
+        </div>
+    </div>
+
+    <div id="playlist"></div>
+
+    <div class="row">
+        <div class="col-sm-2">
+            Volume
+        </div>
+        <div class="col-sm-10">
+            <input class="slider" type="range" id="volume" name="volume" min="1" value="100" max="100" step="1">
+        </div>
+    </div>
+
+</div>
 
 </body>
 </html>
