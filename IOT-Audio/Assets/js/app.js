@@ -53,6 +53,8 @@
                 var files = playlist.Files;
 
                 for (var i = 0; i < files.length; i++) {
+					var file = files[i];
+					
                     var $row = $(playlistRowTemplate);
                     var $fileContainer = $row.find('.fileContainer');
                     var $optionsContainer = $row.find('.optionsContainer');
@@ -61,12 +63,12 @@
                     var $input = $('<input type="checkbox" class="startupFile" />');
                     var $label = $('<label class="float-right"></label>');
                     
-                    $input.val(files[i].FileName);
+                    $input.val(file.FileName);
 
-                    $link.attr('href', files[i].FileName);
-                    $link.text(files[i].DisplayName);
+                    $link.attr('href', file.FileName);
+                    $link.text(file.DisplayName);
 
-                    $input.attr('checked', files[i].FileName === settings.StartupFilename);
+                    $input.attr('checked', file.FileName === settings.StartupFilename);
 
                     $input.appendTo($label);
                     $link.appendTo($fileContainer);
