@@ -31,12 +31,8 @@
 
         var inputs = $('input[type="checkbox"].startupFile');
         var filename = this.value;
-
-        for (var i = 0; i < inputs.length; i++) {
-            if (this != inputs[i]) {
-                inputs[i].checked = false;
-            }
-        }
+		
+        inputs.not(this).attr('checked', false);
 
         sendChange('startupFile', { filename: this.checked ? filename : null });
     };
