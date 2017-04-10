@@ -9,7 +9,6 @@
 
     internal class WebServer : IDisposable
     {
-        private int Port = 16000;
         private HttpServer Server;
 
         internal WebServer(Player player, Manager manager)
@@ -19,10 +18,9 @@
 
             var config = new HttpServerConfiguration();
             
-            config.ListenOnPort(Port)
+            config.ListenOnPort((int)manager.GetPublicPort())
                 .RegisterRoute("api", routeHandler)
-                .RegisterRoute(new StaticFileRouteHandler(@"Assets"))
-                .EnableCors();
+                .RegisterRoute(new StaticFileRouteHandler(@"Assets"));
 
             Server = new HttpServer(config);
         }

@@ -18,6 +18,12 @@
             return music;
         }
 
+        internal int GetStartupVolume()
+        {
+            var volume = ApplicationData.Current.LocalSettings.Values["volume"];
+            return volume is int ? (int)volume : 100;
+        }
+
         internal void SaveStartupVolume(int volume)
         {
             ApplicationData.Current.LocalSettings.Values["volume"] = volume;
@@ -34,10 +40,15 @@
             return file?.ToString();
         }
 
-        internal int GetStartupVolume()
+        internal void SavePublicPort(uint port)
         {
-            var volume = ApplicationData.Current.LocalSettings.Values["volume"];
-            return volume is int ? (int)volume : 100;
+            ApplicationData.Current.LocalSettings.Values["publicPort"] = port;
+        }
+
+        internal uint GetPublicPort()
+        {
+            var publicPort = ApplicationData.Current.LocalSettings.Values["publicPort"];
+            return publicPort is uint ? (uint)publicPort : 16000;
         }
 
         internal string GetApiKey()
