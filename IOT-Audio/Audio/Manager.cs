@@ -18,6 +18,17 @@
             return music;
         }
 
+        internal bool GetApiKeySaved()
+        {
+            var apiKeySaved = ApplicationData.Current.LocalSettings.Values["apiKeySaved"];
+            return apiKeySaved is bool ? (bool)apiKeySaved : false;
+        }
+
+        internal void SetApiKeySaved()
+        {
+            ApplicationData.Current.LocalSettings.Values["apiKeySaved"] = true;
+        }
+
         internal int GetStartupVolume()
         {
             var volume = ApplicationData.Current.LocalSettings.Values["volume"];

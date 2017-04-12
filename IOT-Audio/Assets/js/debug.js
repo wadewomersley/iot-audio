@@ -6,7 +6,11 @@ if (location.search.indexOf('DEBUG') > -1) {
             switch (args.type) {
                 case 'get': 
                     if (args.url.indexOf('/settings') > -1) {
-                        resolve([{Volume: 75}]);
+                        resolve([{
+                            Volume: 75,
+                            ApiKeySaved: false,
+                            ApiKey: "TESTTESTTEST"
+                        }]);
                     } else if (args.url.indexOf('/playlist')) {
                         resolve([{Files: [
                             {

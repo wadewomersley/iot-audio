@@ -7,6 +7,7 @@
     <title>IOT Audio Player</title>
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/app.css">
+    <script src="js/polyfill.js"></script>
     <script src="js/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/debug.js"></script>
@@ -15,6 +16,10 @@
 <body>
 
 <div class="container">
+    <div class="alert alert-danger alert-dismissable" role="alert" id="apiKeyNotification" style="display: none">
+        Your API key is {key} - please make a note of this then <a href="#" data-dismiss="alert">click here</a>. <strong>This will not be shown again!</strong>.<br />
+        For future access the URL must include the key, e.g. {url}.
+    </div>
 
     <div class="row">
         <div class="col-sm-12">

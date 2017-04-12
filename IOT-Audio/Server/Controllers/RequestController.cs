@@ -36,12 +36,33 @@
             var settings = new Settings()
             {
                 StartupFilename = Manager.GetStartupFile(),
-                Volume = Manager.GetStartupVolume()
+                Volume = Manager.GetStartupVolume(),
+                ApiKeySaved = Manager.GetApiKeySaved(),
+                ApiKey = Manager.GetApiKey()
             };
 
             return new GetResponse(GetResponse.ResponseStatus.OK, settings);
         }
-        
+
+        [UriFormat("/apikey/seen")]
+        public IPutResponse SeenApiKey()
+        {
+            Manager.SetApiKeySaved();
+            return new PutResponse(PutResponse.ResponseStatus.NoContent);
+        }
+
+        [UriFormat("/apikey")]
+        public IPutResponse SetApiKey([FromContent] ApiKeyBase data)
+        {
+            if (!IsValidApiKey(data.ApiKey))
+            {
+                return new PutResponse(PutResponse.ResponseStatus.NotFound);
+            }
+
+            Manager.SetApiKey(data.ApiKey);
+            return new PutResponse(PutResponse.ResponseStatus.NoContent);
+        }
+
         [UriFormat("/volume")]
         public IPutResponse SetVolume([FromContent] SetVolumeData data)
         {

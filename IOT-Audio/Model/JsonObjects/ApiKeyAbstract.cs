@@ -2,7 +2,7 @@
 {
     using Windows.Storage;
 
-    internal class ApiKeyAbstract
+    internal class ApiKeyBase
     {
         public string ApiKey { get; set; }
     }
