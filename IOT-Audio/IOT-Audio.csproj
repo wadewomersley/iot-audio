@@ -129,6 +129,7 @@
     <Content Include="Assets\css\bootstrap.min.css" />
     <Content Include="Assets\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Assets\index.html" />
+    <Content Include="Assets\js\polyfill.js" />
     <Content Include="Assets\js\app.js" />
     <Content Include="Assets\js\bootstrap.min.js" />
     <Content Include="Assets\js\debug.js" />
