@@ -4,21 +4,31 @@
     var serverSettings = {};
     var $playlist;
 
-    function sendChange(path, data) {
-        data.apiKey = apiKey;
+    axios.defaults.baseURL = '/api/';
 
-        $.ajax({
-            type: 'PUT',
-            url: '/api/' + path,
-            data: JSON.stringify(data)
+    axios.interceptors.request.use(function (config) {
+        config.url = config.url + (config.url.indexOf('?') > -1 ? '&' : '?') + 'apiKey=' + encodeURIComponent(apiKey);
+
+        if (config.method == 'post' || config.method == 'put') {
+            config.data.apiKey = apiKey;
+        }
+
+        return config;
+    });
+
+    function sendChange(path, data) {
+        return axios.put(path, data).then(function (response) {
+            return response.data;
+        }).catch(function (error) {
+            return Promise.reject(error);
         });
     }
 
     function getData(path) {
-        path = path + (path.indexOf('?') > -1 ? '&' : '?') + 'apiKey=' + encodeURIComponent(apiKey);
-        return $.ajax({
-            type: 'get',
-            url: '/api/' + path
+        return axios.get(path).then(function (response) {
+            return response.data;
+        }).catch(function (error) {
+            return Promise.reject(error);
         });
     }
 
@@ -42,7 +52,7 @@
     function showNewKey(key) {
         apiKey = key;
 
-        var url = (location.href.indexOf('?') > -1 ? location.href.substring(0, location.href.indexOf('?')) : '') + '?' + apiKey;
+        var url = (location.href.indexOf('?') > -1 ? location.href.substring(0, location.href.indexOf('?')) : location.href) + '?' + apiKey;
         
 
         var html = $('#apiKeyNotification').html()
@@ -83,25 +93,25 @@
 
     $(document).ready(function () {
         $playlist = $('#playlist');
-
         var $volume = $('#volume');
 
-        $.when(getData('settings'), getData('playlist'))
-            .then(function (settings, playlist) {
-                serverSettings = settings[0];
-                playlist = playlist[0];
+        getData('settings').then(function (settings) {
+            if (!settings.ApiKeySaved) {
+                showNewKey(settings.ApiKey);
+                apiKey = settings.ApiKey;
+            }
+            if (settings.Volume !== null) {
+                $volume.val(settings.Volume);
+            }
 
-                if (serverSettings.Volume !== null) {
-                    $volume.val(serverSettings.Volume);
-                }
-
-                if (!serverSettings.ApiKeySaved) {
-                    showNewKey(serverSettings.ApiKey);
-                }
-
+            getData('playlist').then(function (playlist) {
                 var files = playlist.Files;
                 files.forEach(addPlaylistItem);
+
             });
+        }).catch(function (error) {
+            return;
+        });;
 
         $volume.on('change', function (e) {
             sendChange('volume', { Volume: parseInt($(this).val()) });

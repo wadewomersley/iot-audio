@@ -28,7 +28,7 @@
         [UriFormat("/settings?apiKey={apiKey}")]
         public IGetResponse GetSettings(string apiKey)
         {
-            if (!IsValidApiKey(apiKey))
+            if (Manager.GetApiKeySaved() && !IsValidApiKey(apiKey))
             {
                 return new GetResponse(GetResponse.ResponseStatus.NotFound);
             }
