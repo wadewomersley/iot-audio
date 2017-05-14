@@ -9,7 +9,7 @@
     axios.interceptors.request.use(function (config) {
         config.url = config.url + (config.url.indexOf('?') > -1 ? '&' : '?') + 'apiKey=' + encodeURIComponent(apiKey);
 
-        if (config.method == 'post' || config.method == 'put') {
+        if (config.method === 'post' || config.method === 'put') {
             config.data.apiKey = apiKey;
         }
 
@@ -79,7 +79,7 @@
 
         $link.attr('href', file.FileName);
         $link.text(file.DisplayName);
-
+        
         $input.attr('checked', file.FileName === serverSettings.StartupFilename);
 
         $input.appendTo($label);
@@ -96,6 +96,8 @@
         var $volume = $('#volume');
 
         getData('settings').then(function (settings) {
+            serverSettings = settings;
+
             if (!settings.ApiKeySaved) {
                 showNewKey(settings.ApiKey);
                 apiKey = settings.ApiKey;
