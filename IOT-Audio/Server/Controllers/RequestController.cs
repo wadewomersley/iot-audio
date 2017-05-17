@@ -8,6 +8,9 @@
     using Restup.Webserver.Models.Contracts;
     using Server.Model.JsonObjects;
 
+    /// <summary>
+    /// API interface for the front end
+    /// </summary>
     [RestController(InstanceCreationType.Singleton)]
     internal class RequestController
     {
