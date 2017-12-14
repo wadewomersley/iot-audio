@@ -1,14 +1,12 @@
 ﻿namespace IOT_Audio.Server.Controllers
 {
-    using System;
     using Audio;
-    using System.Linq;
     using Restup.Webserver.Attributes;
-    using Restup.Webserver.Models.Schemas;
     using Restup.Webserver.Models.Contracts;
+    using Restup.Webserver.Models.Schemas;
     using Server.Model.JsonObjects;
-    using Windows.Storage;
-    using System.Threading.Tasks;
+    using System;
+    using System.Linq;
 
     /// <summary>
     /// API interface for the front end
@@ -23,6 +21,15 @@
         {
             Player = player;
             Manager = manager;
+        }
+
+        private PlaylistData GetPlaylist()
+        {
+
+            var fileList = Manager.GetFileList().GetAwaiter().GetResult();
+            var files = fileList.Select(f => FileInformation.FromStorage(f).GetAwaiter().GetResult()).ToList();
+            return new PlaylistData() { Files = files.ToArray() };
+
         }
 
         private bool IsValidApiKey(string apiKey)
@@ -88,25 +95,12 @@
             {
                 return new PutResponse(PutResponse.ResponseStatus.NotFound);
             }
+            
+            var file = GetPlaylist().FindMatchingFile(data.Term);
 
-            var files = (PlaylistData)this.GetFileList(data.ApiKey).ContentData;
-            var found = false;
-            for (var i = 0; i < files.Files.Length; i++)
+            if (file != null)
             {
-                for (var j = 0; j < files.Files[i].SearchTerms.Length; j++)
-                {
-                    if (files.Files[i].SearchTerms[j].Replace(" ", "").ToLower().Equals(data.Term.Replace(" ", "").ToLower()))
-                    {
-                        Player.SetFileName(files.Files[i].FileName);
-                        found = true;
-                        break;
-                    }
-                }
-
-                if (found)
-                {
-                    break;
-                }
+                Player.SetFileName(file.FileName);
             }
 
             return new PutResponse(PutResponse.ResponseStatus.NoContent);
@@ -126,24 +120,11 @@
             }
             else
             {
-                var files = (PlaylistData)this.GetFileList(data.ApiKey).ContentData;
-                var found = false;
-                for (var i = 0; i < files.Files.Length; i++)
-                {
-                    for (var j = 0; j < files.Files[i].SearchTerms.Length; j++)
-                    {
-                        if (files.Files[i].SearchTerms[j].Replace(" ", "").ToLower().Equals(data.Term.Replace(" ", "").ToLower()))
-                        {
-                            Manager.SaveStartupFile(files.Files[i].FileName);
-                            found = true;
-                            break;
-                        }
-                    }
+                var file = GetPlaylist().FindMatchingFile(data.Term);
 
-                    if (found)
-                    {
-                        break;
-                    }
+                if (file != null)
+                {
+                    Manager.SaveStartupFile(file.FileName);
                 }
             }
             
@@ -157,12 +138,8 @@
             {
                 return new GetResponse(GetResponse.ResponseStatus.NotFound);
             }
-
-            var fileList = Manager.GetFileList().GetAwaiter().GetResult();
-            var files = fileList.Select(f => FileInformation.FromStorage(f).GetAwaiter().GetResult()).ToList();
-            var body = new PlaylistData() { Files = files.ToArray() };
             
-            return new GetResponse(GetResponse.ResponseStatus.OK, body); ;
+            return new GetResponse(GetResponse.ResponseStatus.OK, GetPlaylist()); ;
         }
     }
 }
