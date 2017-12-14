@@ -17,7 +17,10 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <PackageCertificateKeyFile>IOT-Audio_TemporaryKey.pfx</PackageCertificateKeyFile>
-    <PackageCertificateThumbprint>99F26C58A1EDA24C9DB7985829AD240DA3E8DFC6</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>901ACAA649F034ADD6D74B520EA409DCE6FF0EC6</PackageCertificateThumbprint>
+    <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
+    <AppxBundle>Always</AppxBundle>
+    <AppxBundlePlatforms>arm</AppxBundlePlatforms>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -111,6 +114,7 @@
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Model\JsonObjects\ApiKeyBase.cs" />
+    <Compile Include="Model\JsonObjects\SetPlayItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Model\JsonObjects\SetFileData.cs" />
     <Compile Include="Model\JsonObjects\FileInformation.cs" />

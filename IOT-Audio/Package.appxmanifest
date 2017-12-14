@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
-  <Identity Name="IOTAudio" Publisher="CN=wade8" Version="1.0.0.0" />
+  <Identity Name="IOTAudio" Publisher="CN=wade8" Version="1.0.2.0" />
   <mp:PhoneIdentity PhoneProductId="4845e3d4-f730-42c7-bb66-74f7b35e0189" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>IOT-Audio</DisplayName>
@@ -21,11 +21,6 @@
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
       </uap:VisualElements>
       <Extensions>
-        <uap:Extension Category="windows.mediaPlayback">
-          <uap:MediaPlayback>
-            <uap:Codec Name="audio/mpeg" />
-          </uap:MediaPlayback>
-        </uap:Extension>
         <uap:Extension Category="windows.fileTypeAssociation">
           <uap:FileTypeAssociation Name="audio">
             <uap:EditFlags OpenIsSafe="true" />
@@ -33,6 +28,11 @@
               <uap:FileType ContentType="audio/mpeg">.mp3</uap:FileType>
             </uap:SupportedFileTypes>
           </uap:FileTypeAssociation>
+        </uap:Extension>
+        <uap:Extension Category="windows.mediaPlayback">
+          <uap:MediaPlayback>
+            <uap:Codec Name="audio/mpeg" />
+          </uap:MediaPlayback>
         </uap:Extension>
       </Extensions>
     </Application>

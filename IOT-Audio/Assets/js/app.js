@@ -35,18 +35,18 @@
     function playLink(e) {
         e.preventDefault();
 
-        sendChange('play', { FileName: decodeURIComponent(this.pathname.substring(1)) });
+        sendChange('play', { Term: decodeURIComponent(this.title) });
     };
 
     function changeStartupFile(e) {
         e.preventDefault();
 
         var inputs = $('input[type="checkbox"].startupFile');
-        var filename = this.value;
+        var displayName = this.value;
 		
         inputs.not(this).attr('checked', false);
 
-        sendChange('startupFile', { filename: this.checked ? filename : null });
+        sendChange('startupFile', { term: this.checked ? displayName : null });
     };
 
     function showNewKey(key) {
@@ -75,10 +75,11 @@
         var $input = $('<input type="checkbox" class="startupFile" />');
         var $label = $('<label class="float-right"></label>');
 
-        $input.val(file.FileName);
+        $input.val(file.DisplayName);
 
         $link.attr('href', file.FileName);
-        $link.text(file.DisplayName);
+        $link.attr('title', file.DisplayName);
+        $link.text(file.SearchTerms.join(' / '));
         
         $input.attr('checked', file.FileName === serverSettings.StartupFilename);
 

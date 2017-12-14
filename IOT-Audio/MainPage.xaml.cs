@@ -23,7 +23,7 @@
 
             mediaPlayer.SetVolume(manager.GetStartupVolume());
             mediaPlayer.SetFileName(manager.GetStartupFile());
-
+            
             WebServer = new WebServer(mediaPlayer, manager);
         }
 
